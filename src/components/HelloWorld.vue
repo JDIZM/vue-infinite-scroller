@@ -7,7 +7,7 @@
       Vite Documentation
     </a>
     |
-    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Documentation</a>
+    <a href="https://vuejs.org/" target="_blank">Vue 2 Documentation</a>
   </p>
 
   <!-- <button type="button" @click="state.count++">count is: {{ state.count }}</button> -->
@@ -20,6 +20,7 @@
 
 |<script>
 export default {
+  name: 'Hellworld',
   props: {
     msg: String
   },
