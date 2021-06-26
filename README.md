@@ -8,7 +8,7 @@
 
 ```bash
 
-`demo url`
+`https://unruffled-mayer-87156c.netlify.app`
 ```
 
 ## setup
@@ -28,9 +28,13 @@
 
 ## deploy
 
-- netlify
+using [netlify](https://netlify.app/) for deployment
 
 ```bash
+# setup netlify project and follow the steps
+`netlify init`
+
 # deploy to production
+`netlify deploy --prod`
 
 ```
