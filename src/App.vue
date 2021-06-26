@@ -14,7 +14,6 @@
       >
         Error {{ errorMsg }}
       </div>
-
       <ListGroup
         v-if="listResults"
         :results="listResults"
@@ -36,7 +35,7 @@ export default {
       loading: false,
       errorMsg: null,
       username: import.meta.env.VITE_CLIENT_ID,
-      password: import.meta.env.VITE_SECRET,
+      password: "",
       firstResults: null,
       after: null,
       nextResults: [],
@@ -48,7 +47,6 @@ export default {
   mounted() {
     if (this.access_token === "") {
       // get an access token
-      console.log("getting an access token...");
       this.getToken();
       // reload the page and refresh token when it expires.
       setTimeout(() => {
@@ -63,21 +61,13 @@ export default {
       await fetch("https://www.reddit.com/api/v1/access_token", {
         method: "POST",
         headers: {
-          // "Content-Type": "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
-          // 'Authorization': 'Basic' + base64.encode(this.username + ":" + this.password),
-          // 'Authorization': 'Basic' + Buffer.from(this.username + ":" + this.password).toString('base64')
           Authorization:
             "Basic " + window.btoa(this.username + ":" + this.password),
         },
-        // the JSON method
-        //  body: JSON.stringify({
-        //   grant_type: 'client_credentials',
-        //   device_id: 'DO_NOT_TRACK_THIS_DEVICE'
-        // })
-        // the www-form-urlencoded method
         body: new URLSearchParams({
-          grant_type: "client_credentials",
+          // installed app method, uses no password and doesn't expose the secret key
+          grant_type: "https://oauth.reddit.com/grants/installed_client",
           device_id: "DO_NOT_TRACK_THIS_DEVICE",
         }),
       })

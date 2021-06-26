@@ -1,6 +1,5 @@
 <template>
   <div
-    ref="list-group"
     class="list-group"
   >
     <h2>/r/aww</h2>
