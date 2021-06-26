@@ -2,10 +2,24 @@
   <div id="app">
     <div class="container">
       <h1>REDDIT INFINITE SCROLLER</h1>
-      <div v-if="loading" class="loading">Loading data...</div>
-      <div v-if="errorMsg" class="error">Error {{ errorMsg }}</div>
-      
-      <ListGroup v-if="results" :results="results" />
+      <div
+        v-if="loading"
+        class="loading"
+      >
+        Loading data...
+      </div>
+      <div
+        v-if="errorMsg"
+        class="error"
+      >
+        Error {{ errorMsg }}
+      </div>
+
+      <ListGroup
+        v-if="listResults"
+        :results="listResults"
+        @onObserveLast="getNextResults(after)"
+      />
     </div>
   </div>
 </template>
@@ -15,38 +29,107 @@ import ListGroup from "./components/ListGroup.vue";
 export default {
   name: "App",
   components: {
-    ListGroup
+    ListGroup,
   },
   data() {
     return {
-      //
-      title: "example",
-      results: null,
-      access_token: '-9HJKQTBB6tDHDbR0p9N3feGyUDkU2g',
       loading: false,
-      errorMsg: null
+      errorMsg: null,
+      username: import.meta.env.VITE_CLIENT_ID,
+      password: import.meta.env.VITE_SECRET,
+      firstResults: null,
+      after: null,
+      nextResults: [],
+      listResults: null,
+      access_token: "",
+      expires_in: 0,
     };
   },
   mounted() {
-    // get data with fetch api
-    fetch("https://oauth.reddit.com//r/aww/hot", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: "bearer " + this.access_token,
-      },
-    })
-      // returns a promise containing the response object
-      .then((response) => response.json())
-      // This is just an HTTP response, not the actual JSON.
-      // To extract the JSON body content from the response, we use the json() method
-      // (defined on the Body mixin, which is implemented by both the
-      // Request and Response objects.)
-      .then((json) => {
-        console.log(json)
-        this.results = json.data
+    if (this.access_token === "") {
+      // get an access token
+      console.log("getting an access token...");
+      this.getToken();
+      // reload the page and refresh token when it expires.
+      setTimeout(() => {
+        console.log("1 hour reloading page..");
+        location.reload();
+      }, 3600000);
+    }
+  },
+  methods: {
+    async getToken() {
+      this.loading = true;
+      await fetch("https://www.reddit.com/api/v1/access_token", {
+        method: "POST",
+        headers: {
+          // "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+          // 'Authorization': 'Basic' + base64.encode(this.username + ":" + this.password),
+          // 'Authorization': 'Basic' + Buffer.from(this.username + ":" + this.password).toString('base64')
+          Authorization:
+            "Basic " + window.btoa(this.username + ":" + this.password),
+        },
+        // the JSON method
+        //  body: JSON.stringify({
+        //   grant_type: 'client_credentials',
+        //   device_id: 'DO_NOT_TRACK_THIS_DEVICE'
+        // })
+        // the www-form-urlencoded method
+        body: new URLSearchParams({
+          grant_type: "client_credentials",
+          device_id: "DO_NOT_TRACK_THIS_DEVICE",
+        }),
       })
-      .catch((err) => this.errorMsg = err);
+        .then((response) => response.json())
+        .then((json) => {
+          // token expires_in 3600 seconds // 1 hour
+          this.access_token = json.access_token;
+          this.expires_in = json.expires_in;
+          this.getResults();
+        })
+        .catch((err) => console.log(err));
+    },
+    async getResults() {
+      await fetch("https://oauth.reddit.com//r/aww/new", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: "bearer " + this.access_token,
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          this.firstResults = json.data;
+          // map only the children to new array so we can manipulate data
+          this.listResults = json.data.children.map((item) => item);
+          this.after = json.data.after;
+          this.loading = false;
+        })
+        .catch((err) => (this.errorMsg = err));
+    },
+    async getNextResults(after) {
+      if (!after) {
+        return null;
+      } else {
+        // fetch the next 25 results with the after token
+        const query = "?after=" + after;
+        await fetch("https://oauth.reddit.com//r/aww/hot" + query, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "bearer " + this.access_token,
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            this.nextResults = json.data;
+            this.after = json.data.after;
+            this.listResults.push(...json.data.children);
+          })
+          .catch((err) => (this.errorMsg = err));
+      }
+    },
   },
 };
 </script>
@@ -59,5 +142,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.container {
+  padding: 0.5rem;
+  max-width: 770px;
+  margin: auto;
 }
 </style>

@@ -1,10 +1,12 @@
 <template>
   <ul
     v-if="data"
-    class="list__ul"
+    class="list"
   >
-    <!-- post_hint == link -->
-    <li class="list__ul__item list__ul__item--thumb">
+    <li
+      class="list__item list__item--thumb"
+      :class="classes"
+    >
       <img
         v-if="data.thumbnail === 'default'"
         :src="aww"
@@ -22,29 +24,35 @@
         loading="lazy"
       >
     </li>
-    <li class="list__ul__item">
+    <li class="list__item">
       <a
         :href="'https://reddit.com/' + data.permalink"
         target="_blank"
         rel="noreferrer"
       >{{ data.title }}</a>
     </li>
-    <li class="list__ul__item">
+    <li class="list__item">
       {{ data.ups }} upvotes in {{ data.subreddit_name_prefixed }}
     </li>
-    <li class="list__ul__item">
+    <li class="list__item">
       posted {{ convertTimestamp }}
     </li>
     <button
       v-if="data.post_hint"
-      @click="open = !open"
+      @click="showContent"
     >
-      show more
+      View Content
     </button>
-    <li v-if="data.post_hint == 'link' && open">
+    <li
+      v-if="data.post_hint == 'link' && open"
+      class="mt-1"
+    >
       <a :href="data.url">{{ data.url }}</a>
     </li>
-    <li v-if="data.post_hint === 'image' && open">
+    <li
+      v-if="data.post_hint === 'image' && open"
+      class="mt-1"
+    >
       <img
         :src="data.url"
         :alt="data.title"
@@ -53,7 +61,10 @@
         loading="lazy"
       >
     </li>
-    <li v-if="data.post_hint === 'hosted:video' && open">
+    <li
+      v-if="data.post_hint === 'hosted:video' && open"
+      class="mt-1"
+    >
       <video
         :src="data.media.reddit_video.fallback_url"
         type="video/mp4"
@@ -74,11 +85,6 @@ export default {
       type: Object,
       required: true,
     },
-    // open: {
-    //   type: Boolean,
-    //   required: false,
-    //   default: () => false
-    // }
   },
   data() {
     return {
@@ -99,7 +105,7 @@ export default {
   },
   methods: {
     showContent() {
-      //
+      this.open = !this.open;
       this.$emit("onShowContent", this.open);
     },
   },
@@ -118,21 +124,20 @@ img {
   max-width: 600px;
 }
 
-.list__ul {
+.list {
   list-style-type: none;
   padding: 1rem 0;
-  margin: 1.5rem;
   background: rgb(243, 243, 243);
   border-radius: 0.5rem;
 }
 
-.list__ul__item {
-  padding: 0;
+.list__item {
+  padding: 0.5rem;
 }
 
-.list__ul__item--thumb > img {
-  width: 60px;
-  height: 60px;
+.list__item--thumb > img {
+  width: 80px;
+  height: 80px;
 }
 
 button {
@@ -142,5 +147,9 @@ button {
   border: none;
   padding: 0.5rem 0.5rem;
   border-radius: 0.25rem;
+  max-width: 200px;
+}
+.mt-1 {
+  margin-top: 1rem;
 }
 </style>
