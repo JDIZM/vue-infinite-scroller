@@ -127,7 +127,7 @@ export default {
       } else {
         // fetch the next 25 results with the after token
         const query = "?after=" + after;
-        await fetch("https://oauth.reddit.com//r/aww/hot" + query, {
+        await fetch("https://oauth.reddit.com//r/aww/" + this.option + query, {
           method: "GET",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
