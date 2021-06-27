@@ -100,14 +100,20 @@ export default {
     },
   },
   created() {
-    this.timestamp = this.data.created_utc;
-    this.timeAgo = moment(this.timestamp * 1000).fromNow();
+    this.updateTime()
+  },
+  updated() {
+     this.updateTime()
   },
   methods: {
     showContent() {
       this.open = !this.open;
       this.$emit("onShowContent", this.open);
     },
+    updateTime() {
+      this.timestamp = this.data.created_utc;
+      this.timeAgo = this.convertTimestamp;
+    }
   },
 };
 </script>
