@@ -14,6 +14,22 @@
       >
         Error {{ errorMsg }}
       </div>
+      <div>
+        <label for="option-select">Show me: </label>
+        <select
+          id="option-select"
+          name="option-select"
+          @change="optionSelect"
+        >
+          <option
+            v-for="(o, i) in options"
+            :key="i"
+            :value="o"
+          >
+            {{ o }}
+          </option>
+        </select>
+      </div>
       <ListGroup
         v-if="listResults"
         :results="listResults"
@@ -42,6 +58,8 @@ export default {
       listResults: null,
       access_token: "",
       expires_in: 0,
+      option: "hot",
+      options: ["hot", "new", "rising", "top"],
     };
   },
   mounted() {
@@ -56,6 +74,11 @@ export default {
     }
   },
   methods: {
+    optionSelect(e) {
+      console.log(e.target.value);
+      this.option = e.target.value;
+      this.getResults();
+    },
     async getToken() {
       this.loading = true;
       await fetch("https://www.reddit.com/api/v1/access_token", {
@@ -81,7 +104,7 @@ export default {
         .catch((err) => console.log(err));
     },
     async getResults() {
-      await fetch("https://oauth.reddit.com//r/aww/new", {
+      await fetch("https://oauth.reddit.com//r/aww/" + this.option, {
         method: "GET",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -138,5 +161,9 @@ export default {
   padding: 0.5rem;
   max-width: 770px;
   margin: auto;
+}
+
+#option-select {
+  padding: 0.5rem;
 }
 </style>

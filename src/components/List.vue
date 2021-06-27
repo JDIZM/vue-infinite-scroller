@@ -121,12 +121,12 @@ video {
 
 img {
   width: 100%;
-  max-width: 600px;
+  max-width: 400px;
 }
 
 .list {
   list-style-type: none;
-  padding: 1rem 0;
+  padding: 0;
   background: rgb(243, 243, 243);
   border-radius: 0.5rem;
 }
@@ -136,12 +136,13 @@ img {
 }
 
 .list__item--thumb > img {
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
+  border-radius: 0.25rem;
 }
 
 button {
-  margin: 1rem 0 0 0;
+  margin: 1rem 0;
   background: lightgray;
   cursor: pointer;
   border: none;

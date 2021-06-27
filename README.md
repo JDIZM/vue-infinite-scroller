@@ -1,17 +1,12 @@
-# vite
+# vue-infinite-scroller
 
-- changed vue version from "vue": "^3.0.5" to "2.6.14"
-- updated vite config with https://www.npmjs.com/package/vite-plugin-vue2
-- updated components, App.vue and main.js with vue 2 config and format.
+This is built with Vue 2 using [Vite](https://vitejs.dev/). I have changed the Vite config and component layouts to use Vue 2 instead of version 3.
 
-## demo
-
-```bash
+## Demo
 
 `https://unruffled-mayer-87156c.netlify.app`
-```
 
-## setup
+## Setup
 
 ```bash
 
@@ -26,9 +21,9 @@
 
 ```
 
-## deploy
+## Deploy
 
-using [netlify](https://netlify.app/) for deployment
+Using [netlify](https://netlify.app/) for deployment
 
 ```bash
 # setup netlify project and follow the steps

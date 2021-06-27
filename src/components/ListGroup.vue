@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="list-group"
-  >
+  <div class="list-group">
     <h2>/r/aww</h2>
     <List
       v-for="(item, i) in results"
