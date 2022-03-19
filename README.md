@@ -33,3 +33,16 @@ Using [netlify](https://netlify.app/) for deployment
 `netlify deploy --prod`
 
 ```
+
+## Node version
+
+You may notice issues when using an M1 Mac so be sure to set the specific node version.
+
+Set your node version using nvm with the `.nvmrc` file.
+
+If you don't have node version manager then [download nvm](https://github.com/nvm-sh/nvm)
+
+```
+# use node version with nvm
+nvm use
+```
