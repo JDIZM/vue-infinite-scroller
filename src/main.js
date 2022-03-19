@@ -1,10 +1,6 @@
-// import { createApp } from 'vue'
-import Vue from 'vue';
-import App from './App.vue'
-// console.log(import.meta.env) // dot env variables
-// createApp(App).mount('#app')
+import Vue from "vue";
+import App from "./App.vue";
+
 new Vue({
-    // router,
-    // store,
-    render: h => h(App)
-  }).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

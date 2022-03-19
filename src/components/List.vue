@@ -1,12 +1,6 @@
 <template>
-  <ul
-    v-if="data"
-    class="list"
-  >
-    <li
-      class="list__item list__item--thumb"
-      :class="classes"
-    >
+  <ul v-if="data" class="list">
+    <li class="list__item list__item--thumb" :class="classes">
       <img
         v-if="data.thumbnail === 'default'"
         :src="aww"
@@ -14,7 +8,7 @@
         height="60px"
         width="60px"
         loading="lazy"
-      >
+      />
       <img
         v-else
         :src="data.thumbnail"
@@ -22,49 +16,34 @@
         height="50px"
         width="60px"
         loading="lazy"
-      >
+      />
     </li>
     <li class="list__item">
       <a
         :href="'https://reddit.com/' + data.permalink"
         target="_blank"
         rel="noreferrer"
-      >{{ data.title }}</a>
+        >{{ data.title }}</a
+      >
     </li>
     <li class="list__item">
       {{ data.ups }} upvotes in {{ data.subreddit_name_prefixed }}
     </li>
-    <li class="list__item">
-      posted {{ convertTimestamp }}
-    </li>
-    <button
-      v-if="data.post_hint"
-      @click="showContent"
-    >
-      View Content
-    </button>
-    <li
-      v-if="data.post_hint == 'link' && open"
-      class="mt-1"
-    >
+    <li class="list__item">posted {{ convertTimestamp }}</li>
+    <button v-if="data.post_hint" @click="showContent">View Content</button>
+    <li v-if="data.post_hint == 'link' && open" class="mt-1">
       <a :href="data.url">{{ data.url }}</a>
     </li>
-    <li
-      v-if="data.post_hint === 'image' && open"
-      class="mt-1"
-    >
+    <li v-if="data.post_hint === 'image' && open" class="mt-1">
       <img
         :src="data.url"
         :alt="data.title"
         width="400px"
         height="400px"
         loading="lazy"
-      >
+      />
     </li>
-    <li
-      v-if="data.post_hint === 'hosted:video' && open"
-      class="mt-1"
-    >
+    <li v-if="data.post_hint === 'hosted:video' && open" class="mt-1">
       <video
         :src="data.media.reddit_video.fallback_url"
         type="video/mp4"
@@ -76,87 +55,87 @@
 </template>
 
 <script>
-import aww from "../assets/aww.jpeg";
-import moment from "moment";
-export default {
-  name: "List",
-  props: {
-    data: {
-      type: Object,
-      required: true,
+  import aww from "../assets/aww.jpeg";
+  import moment from "moment";
+  export default {
+    name: "List",
+    props: {
+      data: {
+        type: Object,
+        required: true,
+      },
     },
-  },
-  data() {
-    return {
-      aww,
-      timestamp: null,
-      timeAgo: null,
-      open: false,
-    };
-  },
-  computed: {
-    convertTimestamp() {
-      return moment(this.timestamp * 1000).fromNow();
+    data() {
+      return {
+        aww,
+        timestamp: null,
+        timeAgo: null,
+        open: false,
+      };
     },
-  },
-  created() {
-    this.updateTime()
-  },
-  updated() {
-     this.updateTime()
-  },
-  methods: {
-    showContent() {
-      this.open = !this.open;
-      this.$emit("onShowContent", this.open);
+    computed: {
+      convertTimestamp() {
+        return moment(this.timestamp * 1000).fromNow();
+      },
     },
-    updateTime() {
-      this.timestamp = this.data.created_utc;
-      this.timeAgo = this.convertTimestamp;
-    }
-  },
-};
+    created() {
+      this.updateTime();
+    },
+    updated() {
+      this.updateTime();
+    },
+    methods: {
+      showContent() {
+        this.open = !this.open;
+        this.$emit("onShowContent", this.open);
+      },
+      updateTime() {
+        this.timestamp = this.data.created_utc;
+        this.timeAgo = this.convertTimestamp;
+      },
+    },
+  };
 </script>
 
 <style lang="css" scoped>
-video {
-  width: 100%;
-  min-height: 300px;
-  max-width: 600px;
-}
+  video {
+    width: 100%;
+    min-height: 300px;
+    max-width: 600px;
+  }
 
-img {
-  width: 100%;
-  max-width: 400px;
-}
+  img {
+    width: 100%;
+    max-width: 400px;
+  }
 
-.list {
-  list-style-type: none;
-  padding: 0;
-  background: rgb(243, 243, 243);
-  border-radius: 0.5rem;
-}
+  .list {
+    list-style-type: none;
+    padding: 0;
+    background: rgb(243, 243, 243);
+    border-radius: 0.5rem;
+  }
 
-.list__item {
-  padding: 0.5rem;
-}
+  .list__item {
+    padding: 0.5rem;
+  }
 
-.list__item--thumb > img {
-  width: 140px;
-  height: 140px;
-  border-radius: 0.25rem;
-}
+  .list__item--thumb > img {
+    width: 140px;
+    height: 140px;
+    border-radius: 0.25rem;
+  }
 
-button {
-  margin: 1rem 0;
-  background: lightgray;
-  cursor: pointer;
-  border: none;
-  padding: 0.5rem 0.5rem;
-  border-radius: 0.25rem;
-  max-width: 200px;
-}
-.mt-1 {
-  margin-top: 1rem;
-}
+  button {
+    margin: 1rem 0;
+    background: lightgray;
+    cursor: pointer;
+    border: none;
+    padding: 0.5rem 0.5rem;
+    border-radius: 0.25rem;
+    max-width: 200px;
+  }
+  .mt-1 {
+    margin-top: 1rem;
+  }
 </style>
