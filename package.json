@@ -2,7 +2,8 @@
   "version": "1.2.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint --ext .js,vue --ignore-path .gitignore . --fix"
   },
   "dependencies": {
     "moment": "^2.29.1",
